@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MmoRpg.Attributes;
 
 namespace MmoRpg.Units
@@ -19,7 +15,7 @@ namespace MmoRpg.Units
 
         public HeavyArcher? Transform()
         {
-            if (!UnitHealth.IsZero())
+            if (IsAlive)
             {
                 return null;
             }
@@ -27,22 +23,15 @@ namespace MmoRpg.Units
             return new HeavyArcher();
         }
 
-        public override void TakeDamage(int damageValue)
+        protected override void OnDestroyed()
         {
-            if (UnitHealth.IsZero())
+            if (Field != null)
             {
-                return;
-            }
+                HeavyArcher? heavyArcher = Transform();
 
-            base.TakeDamage(damageValue);
-
-            if (UnitHealth.IsZero() && Field != null)
-            {
-                HeavyArcher? archer = Transform();
-
-                if (archer != null)
+                if (heavyArcher != null)
                 {
-                    Field.ReplaceUnit(this, archer);
+                    Field.ReplaceUnit(this, heavyArcher);
                 }
             }
         }

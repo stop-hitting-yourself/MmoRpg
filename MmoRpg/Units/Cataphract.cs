@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MmoRpg.Attributes;
 
 namespace MmoRpg.Units
@@ -19,7 +15,7 @@ namespace MmoRpg.Units
 
         public Swordsman? Transform()
         {
-            if (!UnitHealth.IsZero())
+            if (IsAlive)
             {
                 return null;
             }
@@ -27,16 +23,9 @@ namespace MmoRpg.Units
             return new Swordsman();
         }
 
-        public override void TakeDamage(int damageValue)
+        protected override void OnDestroyed()
         {
-            if (UnitHealth.IsZero())
-            {
-                return;
-            }
-
-            base.TakeDamage(damageValue);
-
-            if (UnitHealth.IsZero() && Field != null)
+            if (Field != null)
             {
                 Swordsman? swordsman = Transform();
 

@@ -1,35 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MmoRpg.Attributes;
 
 namespace MmoRpg.Units
 {
     public class LightArcher : Archer
     {
-        public LightArcher()
-            : base(5, 30, DamageType.Physical)
+
+        private int damagePenalty;
+        public LightArcher(): base(5, 30, DamageType.Physical)
         {
         }
 
-        public LightArcher(LightArcher other)
-            : base(other)
+        public LightArcher(LightArcher other): base(other)
         {
+            damagePenalty = other.damagePenalty;
         }
 
         public void ChangeDamageType()
         {
+            if (!IsAlive)
+            {
+                return;
+            }
+
             if (UnitAttack.Type == DamageType.Physical)
             {
+                damagePenalty = Math.Min(10, UnitAttack.Value);
+
+                DecreaseAttack(damagePenalty);
+
                 UnitAttack.ChangeType(DamageType.Magical);
-                DecreaseAttack(10);
             }
             else
             {
+                IncreaseAttack(damagePenalty);
+
                 UnitAttack.ChangeType(DamageType.Physical);
-                IncreaseAttack(10);
+
+                damagePenalty = 0;
             }
         }
 
